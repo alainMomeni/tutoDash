@@ -31,25 +31,21 @@ export const fetchItems = createAsyncThunk(
       const response = await fetch(url, {
         headers: {
           'Authorization': `Bearer ${auth.token}`,
+          'Content-Type': 'application/json',
           'Accept': 'application/json'
         }
       });
 
-      console.log(`📥 apiSlices: Response status for ${type}:`, response.status);
-      
       if (response.status === 403) {
-        console.error(`🚫 apiSlices: Permission denied for ${type}`);
         throw new Error(`You don't have permission to access ${type} data`);
       }
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.errors?.[0]?.message || `Failed to fetch ${type}`);
+        throw new Error(errorData.message || `Failed to fetch ${type}`);
       }
 
       const data = await response.json();
-      console.log(`✅ Successfully fetched ${type} items:`, data);
-      
       return { type, items: data.data };
     } catch (error) {
       console.error(`❌ apiSlices: Error fetching ${type}:`, error);
