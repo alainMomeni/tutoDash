@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AuthSuccess, LogoutResponse } from '@/types/auth/authTypes';
 
-const API_URL = 'http://localhost:8055';
+const API_URL = 'https://backend-station-app-demo.onrender.com';
 
 export const login = createAsyncThunk<AuthSuccess, { email: string; password: string }>(
   'auth/login',
