@@ -26,17 +26,18 @@ export const fetchItems = createAsyncThunk(
       
       const url = `${API_CONFIG.baseURL}${API_CONFIG.endpoints.items(type)}`;
       console.log('🔗 apiSlices: Request URL:', url);
-      console.log('🔑 apiSlices: Auth token:', auth.token ? 'Present' : 'Missing');
       
       const response = await fetch(url, {
         headers: {
           'Authorization': `Bearer ${auth.token}`,
           'Content-Type': 'application/json',
-          'Accept': 'application/json'
+          'Accept': 'application/json',
+          'Role': 'admin' // Add role header
         }
       });
 
       if (response.status === 403) {
+        console.error(`🚫 apiSlices: Permission denied for ${type}`);
         throw new Error(`You don't have permission to access ${type} data`);
       }
 
@@ -64,7 +65,8 @@ export const createItem = createAsyncThunk(
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${auth.token}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Role': 'admin'
         },
         body: JSON.stringify(data)
       });
@@ -92,7 +94,8 @@ export const updateItem = createAsyncThunk(
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${auth.token}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Role': 'admin'
         },
         body: JSON.stringify(data)
       });
@@ -119,7 +122,8 @@ export const deleteItem = createAsyncThunk(
       const response = await fetch(url, {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${auth.token}`
+          'Authorization': `Bearer ${auth.token}`,
+          'Role': 'admin'
         }
       });
 

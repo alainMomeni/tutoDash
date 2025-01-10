@@ -25,7 +25,7 @@ export const API_CONFIG: ApiConfig = {
   },
   endpoints: {
     // Update endpoint to match your backend structure
-    items: (type: string) => `/items/${type}`, // This will generate /items/product, /items/sales
+    items: (type: string) => `/items/${type}?access_role=admin`, // Add access_role
     auth: {
       login: '/auth/login',
       logout: '/auth/logout',
