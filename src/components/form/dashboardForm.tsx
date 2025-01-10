@@ -12,13 +12,13 @@ import { RootState } from '@/store/store';
 const DashboardForm = ({ id, type }: FormProps) => {
   const navigate = useNavigate();
   const { loading, error } = useSelector((state: RootState) => state.form);
-  const { 
-    formData, 
+  const {
+    formData,
     formErrors,
     isSubmitting,
-    handleChange, 
+    handleChange,
     handleSubmit,
-    handleCancel, // Add this
+    handleCancel,
     resetForm
   } = useForm(type, id);
 
@@ -36,7 +36,7 @@ const DashboardForm = ({ id, type }: FormProps) => {
     const success = await handleSubmit(config.fields);
     if (success) {
       resetForm();
-      navigate(`/dashboard/${type}`, { replace: true }); // Use replace here too
+      navigate(`/dashboard/${type}`, { replace: true });
     }
   };
 
@@ -49,7 +49,7 @@ const DashboardForm = ({ id, type }: FormProps) => {
           <FormField
             field={field}
             value={formData[field.name] || ''}
-            onChange={(e) => handleChange(e, field.validation)}
+            onChange={(e) => handleChange(e, field)}
             error={formErrors[field.name]}
             disabled={loading || isSubmitting}
           />
@@ -59,7 +59,7 @@ const DashboardForm = ({ id, type }: FormProps) => {
       <div className={FORM_CONFIG.styles.buttonContainer}>
         <button
           type="button"
-          onClick={handleCancel} // Use the new cancel handler
+          onClick={handleCancel}
           disabled={loading || isSubmitting}
           className={FORM_CONFIG.styles.cancelButton}
         >

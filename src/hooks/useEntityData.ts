@@ -4,9 +4,8 @@ import { EntityType } from '@/types/schema';
 
 export const useEntityData = (type: EntityType) => {
   const [mounted, setMounted] = useState(true);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const { items, loading, error, fetchData, create, update, remove } = useApi(type);
+  const { items, loading, error, fetchData, update, remove } = useApi(type);
 
   // Single fetch on mount
   useEffect(() => {
@@ -34,25 +33,7 @@ export const useEntityData = (type: EntityType) => {
       isActive = false;
       setMounted(false);
     };
-  }, [type]); // Only depend on type, remove fetchData from dependencies
-
-  const handleCreate = useCallback(async (data: any) => {
-    const success = await create(data);
-    if (success && mounted) {
-      await fetchData();
-    }
-    return success;
-  }, [create, fetchData, mounted]);
-
-  const handleUpdate = useCallback(async (id: string, data: any) => {
-    console.log('🔄 useEntityData: Handling update for id:', id);
-    const success = await update(id, data);
-    if (success && mounted) {
-      console.log('✅ useEntityData: Update successful, refreshing data...');
-      await fetchData();
-    }
-    return success;
-  }, [update, fetchData, mounted]);
+  }, [type]);
 
   const handleDelete = useCallback(async (id: string) => {
     console.log('🔄 Handling delete for id:', id);
@@ -67,29 +48,15 @@ export const useEntityData = (type: EntityType) => {
     return false;
   }, [remove, fetchData, mounted]);
 
-  const confirmDelete = useCallback(async () => {
-    if (selectedId && mounted) {
-      const success = await remove(selectedId);
-      if (success) {
-        await fetchData();
-      }
-      setShowDeleteDialog(false);
-      setSelectedId(null);
-      return success;
-    }
-    return false;
-  }, [selectedId, remove, fetchData, mounted]);
-
   return {
     items,
     loading,
     error,
-    handleCreate,
     handleUpdate: update,
     handleDelete,
     showDeleteDialog,
     setShowDeleteDialog,
-    remove, // Export remove directly
-    fetchData // Export fetchData for manual refreshes
+    remove,
+    fetchData
   };
 };

@@ -10,11 +10,9 @@ import {
 } from '@/store/slices/apiSlices';
 import { RootState } from '@/store/store';
 import { EntityType } from '@/types/schema';
-import { useNavigate } from 'react-router-dom';
 
 export const useApi = (entityType: EntityType) => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const { data, loading, error, initialized } = useSelector((state: RootState) => state.api);
   
   const items = data[entityType] || [];

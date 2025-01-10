@@ -3,7 +3,6 @@ import {
   DollarSign,
   FileText,
   Package,
-  BarChart,
   Settings,
   ShoppingCart
 } from 'lucide-react';

@@ -25,7 +25,6 @@ const DashboardTable = ({ type }: DashboardTableProps) => {
     items,
     loading,
     error,
-    handleCreate,
     handleUpdate: update,
     remove,
     fetchData

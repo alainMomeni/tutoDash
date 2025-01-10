@@ -1,4 +1,3 @@
-// src/components/form/hooks/useForm.ts
 import { useState, useEffect, useCallback } from 'react';
 import { useApi } from '@/hooks/useApi';
 import { EntityType } from '@/types/schema';
@@ -6,19 +5,16 @@ import { FormField } from '@/types/form/formTypes';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { resetForm as resetFormAction } from '@/store/slices/formSlice';
 import { useNavigate } from 'react-router-dom';
-import { entities } from '@/config/entities'; // Add this import
+import { entities } from '@/config/entities';
 
 export const useForm = (type: EntityType, id?: string) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { items, loading, error, create, update } = useApi(type);
-  const { items: productItems } = useApi('product'); // Add this line
+  const { items: productItems } = useApi('product');
   
   const [formData, setFormData] = useState<Record<string, any>>(() => {
-    // Get entity configuration
     const entityConfig = entities[type];
-    
-    // Initialize form data with default values for hidden fields
     const defaultValues = entityConfig.fields.reduce((acc, field) => {
       if ('hideInForm' in field && field.hideInForm && 'defaultValue' in field && field.defaultValue !== undefined) {
         console.log(`🔧 Setting default value for ${field.name}:`, field.defaultValue);
@@ -33,17 +29,6 @@ export const useForm = (type: EntityType, id?: string) => {
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Clear form state when component mounts or unmounts
-  useEffect(() => {
-    console.log('🔄 useForm: Form mounted for type:', type, 'with id:', id);
-    
-    // Cleanup function
-    return () => {
-      console.log('🔚 useForm: Form unmounting, cleaning up...');
-      resetForm();
-    };
-  }, [type, id]); // Add dependencies
-
   const resetForm = useCallback(() => {
     console.log('🧹 useForm: Resetting form state');
     setFormData({});
@@ -55,9 +40,16 @@ export const useForm = (type: EntityType, id?: string) => {
   const handleCancel = useCallback(() => {
     console.log('❌ useForm: Cancel clicked, navigating back to table');
     resetForm();
-    // Use navigate(-1) instead of hardcoded path
     navigate(-1);
   }, [navigate, resetForm]);
+
+  useEffect(() => {
+    console.log('🔄 useForm: Form mounted for type:', type, 'with id:', id);
+    return () => {
+      console.log('🔚 useForm: Form unmounting, cleaning up...');
+      resetForm();
+    };
+  }, [type, id, resetForm]);
 
   useEffect(() => {
     if (id && items.length > 0) {
@@ -68,14 +60,8 @@ export const useForm = (type: EntityType, id?: string) => {
     }
   }, [id, items]);
 
-  // Clear form state when unmounting
-  useEffect(() => {
-    return () => {
-      resetForm();
-    };
-  }, []);
-
-  const validateField = (fieldName: string, value: any, validation?: FormField['validation']) => {
+  const validateField = (value: any, field: FormField) => {
+    const { validation } = field;
     if (!validation) return '';
 
     if (validation.required && !value) {
@@ -105,12 +91,11 @@ export const useForm = (type: EntityType, id?: string) => {
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
-    validation?: FormField['validation']
+    field: FormField
   ) => {
     const { name, value, type } = e.target;
     let parsedValue: string | number | boolean = value;
 
-    // Handle different input types
     if (type === 'number') {
       parsedValue = Number(value) || 0;
     } else if (type === 'checkbox') {
@@ -120,7 +105,6 @@ export const useForm = (type: EntityType, id?: string) => {
     setFormData(prev => {
       const newData = { ...prev, [name]: parsedValue };
 
-      // Special handling for sales form when product changes
       if (name === 'product' && value) {
         const selectedProduct = productItems.find(item => item.id === value);
         console.log('Selected product:', selectedProduct);
@@ -134,7 +118,7 @@ export const useForm = (type: EntityType, id?: string) => {
       return newData;
     });
 
-    const error = validateField(name, parsedValue, validation);
+    const error = validateField(parsedValue, field);
     setFormErrors(prev => ({
       ...prev,
       [name]: error
@@ -146,12 +130,7 @@ export const useForm = (type: EntityType, id?: string) => {
     let isValid = true;
 
     fields.forEach(field => {
-      const error = validateField(
-        field.name,
-        formData[field.name],
-        field.validation
-      );
-      
+      const error = validateField(formData[field.name], field);
       if (error) {
         errors[field.name] = error;
         isValid = false;
@@ -170,7 +149,6 @@ export const useForm = (type: EntityType, id?: string) => {
         throw new Error('Please fix the form errors');
       }
 
-      // Get default values for hidden fields
       const entityConfig = entities[type];
       const hiddenDefaults = entityConfig.fields.reduce((acc, field) => {
         if ('hideInForm' in field && field.hideInForm && 'defaultValue' in field && field.defaultValue !== undefined) {
@@ -179,7 +157,6 @@ export const useForm = (type: EntityType, id?: string) => {
         return acc;
       }, {} as Record<string, any>);
 
-      // Combine form data with hidden field defaults
       const dataToSubmit = {
         ...hiddenDefaults,
         ...formData
@@ -212,7 +189,7 @@ export const useForm = (type: EntityType, id?: string) => {
     error,
     handleChange,
     handleSubmit,
-    handleCancel, // Export the cancel handler
+    handleCancel,
     resetForm
   };
 };

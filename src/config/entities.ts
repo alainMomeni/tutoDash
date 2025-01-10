@@ -1,7 +1,5 @@
 import { Package, ShoppingCart } from 'lucide-react';
 
-type FieldType = 'text' | 'number' | 'boolean' | 'enum';
-
 export const entities = {
   product: {
     name: 'product',
