@@ -31,9 +31,9 @@ export const fetchItems = createAsyncThunk(
         headers: {
           'Authorization': `Bearer ${auth.token}`,
           'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'X-Role': 'admin' // Add role in header
-        }
+          'Accept': 'application/json'
+        },
+        credentials: 'include' // Add this line
       });
 
       if (response.status === 403) {
