@@ -31,8 +31,8 @@ export const fetchItems = createAsyncThunk(
         headers: {
           'Authorization': `Bearer ${auth.token}`,
           'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Role': 'admin' // Add role header
+          'Accept': 'application/json'
+          // Removed Role header
         }
       });
 
@@ -66,7 +66,8 @@ export const createItem = createAsyncThunk(
         headers: {
           'Authorization': `Bearer ${auth.token}`,
           'Content-Type': 'application/json',
-          'Role': 'admin'
+          'Accept': 'application/json'
+          // Removed Role header
         },
         body: JSON.stringify(data)
       });
@@ -95,7 +96,8 @@ export const updateItem = createAsyncThunk(
         headers: {
           'Authorization': `Bearer ${auth.token}`,
           'Content-Type': 'application/json',
-          'Role': 'admin'
+          'Accept': 'application/json'
+          // Removed Role header
         },
         body: JSON.stringify(data)
       });
@@ -123,7 +125,8 @@ export const deleteItem = createAsyncThunk(
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${auth.token}`,
-          'Role': 'admin'
+          'Accept': 'application/json'
+          // Removed Role header
         }
       });
 

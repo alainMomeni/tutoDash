@@ -18,14 +18,14 @@ interface ApiConfig {
 }
 
 export const API_CONFIG: ApiConfig = {
-  baseURL: 'https://backend-station-app-demo.onrender.com', // Updated API URL
+  baseURL: 'https://backend-station-app-demo.onrender.com',
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json'
   },
   endpoints: {
-    // Update endpoint to match your backend structure
-    items: (type: string) => `/items/${type}?access_role=admin`, // Add access_role
+    // Include admin role in URL instead of header
+    items: (type: string) => `/items/${type}?access_role=admin`,
     auth: {
       login: '/auth/login',
       logout: '/auth/logout',
