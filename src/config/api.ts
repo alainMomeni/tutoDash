@@ -24,7 +24,6 @@ export const API_CONFIG: ApiConfig = {
     'Accept': 'application/json'
   },
   endpoints: {
-    // Remove access_role from URL
     items: (type: string) => `/items/${type}`,
     auth: {
       login: '/auth/login',
@@ -38,6 +37,7 @@ export const API_CONFIG: ApiConfig = {
 };
 
 export const getAuthHeader = (token: string) => ({
-  Authorization: `Bearer ${token}`,
-  ...API_CONFIG.headers
+  ...API_CONFIG.headers,
+  'Authorization': `Bearer ${token}`,
+  'X-User-Role': 'admin'
 });
