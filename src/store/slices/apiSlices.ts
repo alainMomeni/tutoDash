@@ -31,8 +31,8 @@ export const fetchItems = createAsyncThunk(
         headers: {
           'Authorization': `Bearer ${auth.token}`,
           'Content-Type': 'application/json',
-          'Accept': 'application/json'
-          // Removed Role header
+          'Accept': 'application/json',
+          'X-Role': 'admin' // Add role in header
         }
       });
 
@@ -66,8 +66,8 @@ export const createItem = createAsyncThunk(
         headers: {
           'Authorization': `Bearer ${auth.token}`,
           'Content-Type': 'application/json',
-          'Accept': 'application/json'
-          // Removed Role header
+          'Accept': 'application/json',
+          'X-Role': 'admin'
         },
         body: JSON.stringify(data)
       });

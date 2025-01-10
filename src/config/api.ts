@@ -24,8 +24,8 @@ export const API_CONFIG: ApiConfig = {
     'Accept': 'application/json'
   },
   endpoints: {
-    // Include admin role in URL instead of header
-    items: (type: string) => `/items/${type}?access_role=admin`,
+    // Remove access_role from URL
+    items: (type: string) => `/items/${type}`,
     auth: {
       login: '/auth/login',
       logout: '/auth/logout',
