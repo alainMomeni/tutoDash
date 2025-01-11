@@ -56,6 +56,7 @@ export const fetchItems = createAsyncThunk(
   }
 );
 
+// Create item
 export const createItem = createAsyncThunk(
   'api/createItem',
   async ({ type, data }: { type: EntityType; data: any }, { getState, rejectWithValue }) => {
@@ -67,10 +68,10 @@ export const createItem = createAsyncThunk(
         headers: {
           'Authorization': `Bearer ${auth.token}`,
           'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'X-Role': 'admin'
+          'Accept': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data), // Add the data to the request body
+        credentials: 'include'
       });
 
       if (!response.ok) {
@@ -98,9 +99,9 @@ export const updateItem = createAsyncThunk(
           'Authorization': `Bearer ${auth.token}`,
           'Content-Type': 'application/json',
           'Accept': 'application/json'
-          // Removed Role header
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data), // Add the data to request body
+        credentials: 'include'
       });
 
       if (!response.ok) {
@@ -127,8 +128,8 @@ export const deleteItem = createAsyncThunk(
         headers: {
           'Authorization': `Bearer ${auth.token}`,
           'Accept': 'application/json'
-          // Removed Role header
-        }
+        },
+        credentials: 'include'
       });
 
       if (!response.ok) {
