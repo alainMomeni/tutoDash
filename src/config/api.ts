@@ -37,7 +37,7 @@ export const API_CONFIG: ApiConfig = {
 };
 
 export const getAuthHeader = (token: string) => ({
-  ...API_CONFIG.headers,
   'Authorization': `Bearer ${token}`,
-  'X-User-Role': 'admin'
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
 });
