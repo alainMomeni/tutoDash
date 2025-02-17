@@ -18,7 +18,7 @@ interface ApiConfig {
 }
 
 export const API_CONFIG: ApiConfig = {
-  baseURL: 'https://backend-station-app-demo.onrender.com',
+  baseURL: import.meta.env.VITE_API_URL, // Use environment variable
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json'

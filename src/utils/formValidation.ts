@@ -1,5 +1,5 @@
 import { FormField } from '@/types/form/formTypes';
-import { ValidationError } from '@/types/entities/baseEntity';
+import type { ValidationError } from '@/types/form/formTypes';
 
 export const validateValue = (
   value: any,

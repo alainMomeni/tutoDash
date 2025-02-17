@@ -1,7 +1,9 @@
-import { EntityType } from "../schema";
+import type { DataItem } from '@/config/entities';
+import { EntityName } from '@/config/entities';
 
 export interface FormPageProps {
-  type: EntityType;
+  type: EntityName;
+  id?: string;
 }
 
 export interface FormField {
@@ -19,7 +21,7 @@ export interface FormField {
     pattern?: string;
   };
   relation?: {
-    entity: EntityType;
+    entity: DataItem;
     labelField: string;
     valueField: string;
   };
@@ -41,5 +43,29 @@ export interface FormConfig {
 
 export interface FormProps {
   id?: string;
-  type: EntityType;
+  type: DataItem;
+}
+
+export interface FormFieldProps {
+  field: {
+    name: string;
+    type: string;
+    label?: string;
+    placeholder?: string;
+    relation?: {
+      entity: string;
+      labelField: string;
+      valueField: string;
+    };
+    options?: string[];
+  };
+  value: string | number;
+  onChange: (value: string | number) => void;
+  error?: string;
+  disabled?: boolean;
+}
+
+export interface ValidationError {
+  field: string;
+  message: string;
 }

@@ -1,8 +1,8 @@
 import { Route, Navigate, createBrowserRouter, createRoutesFromElements } from 'react-router-dom';
 import AuthGuard from '@/components/auth/authGuard';
 import LoginPage from '@/app/views/dashboard/login/loginPage';
-import LoginForm from '@/components/form/loginForm';
-import Dashboard from '@/app/views/dashboard/dashboard';
+import { LoginForm } from '@/components/form/FormComponents';
+import DashboardLayout from '@/app/views/dashboard/DashboardLayout';
 import TablePage from '../dashboard/table/tablePage';
 import FormPage from '../dashboard/form/formPage';
 import ProfilePage from '../dashboard/profile/profilePage';
@@ -21,7 +21,7 @@ const appRouters = createBrowserRouter(
         path="/dashboard"
         element={
           <AuthGuard>
-            <Dashboard />
+            <DashboardLayout />
           </AuthGuard>
         }
       >        

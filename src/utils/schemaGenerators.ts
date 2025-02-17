@@ -1,14 +1,21 @@
-import { entities, EntityName } from '@/config/entities';
+import { entities } from '@/config/entities';
 import { FormConfig } from '@/types/form/formTypes';
 import { TableConfig } from '@/types/table/tableType';
+import type { FieldConfig } from '@/types/entities/entityType';
+import type { FormField } from '@/types/form/formTypes';
+import type { EntityName } from '@/config/entities';
+import type { Column } from '@/types/table/tableType';
 
-// Define base field properties
-type BaseField = {
+// Get entity field type with extended properties
+type EntityFieldType = (typeof entities)[EntityName]['fields'][number];
+
+// Define base field properties (if not already defined)
+export interface BaseField {
   name: string;
   type: 'text' | 'number' | 'boolean' | 'enum';
   label: string;
   placeholder?: string;
-  options?: readonly string[];
+  options?: string[];
   filterable?: boolean;
   hideInForm?: boolean;
   hideInTable?: boolean;
@@ -22,14 +29,12 @@ type BaseField = {
     max?: number;
   };
   relation?: {
-    entity: EntityName;
+    // Declare the relation.entity as a union of entity names (adjust as needed)
+    entity: 'product' | 'sales';
     labelField: string;
     valueField: string;
   };
-};
-
-// Get entity field type with extended properties
-type EntityFieldType = (typeof entities)[EntityName]['fields'][number];
+}
 
 // Combined type ensuring all fields have necessary properties
 type EntityField = BaseField & EntityFieldType;
@@ -48,15 +53,38 @@ export const generateFormSchema = (entityName: EntityName): FormConfig => {
         edit: 'Update'
       }
     },
-    fields: entity.fields
-      .filter(field => !('hideInForm' in field) || !field.hideInForm)
-      .map(field => ({
-        ...field,
-        type: ((field.type as string) === 'enum' || (field.type as string) === 'boolean') ? 'text' : (field.type as 'text' | 'number'),
-        placeholder: 'placeholder' in field ? field.placeholder : '',
-        validation: 'validation' in field ? field.validation : undefined,
-        relation: 'relation' in field ? field.relation : undefined
-      }))
+    fields: (entity.fields as FieldConfig[])
+      .filter((field) => !('hideInForm' in field) || !field.hideInForm)
+      .map((field): FormField => {
+        const { type, ...rest } = field;
+        return {
+          ...rest,
+          type:
+            (type === 'enum' || type === 'boolean'
+              ? 'text'
+              : type) as 'number' | 'text' | 'enum' | 'textarea',
+          placeholder: field.placeholder || '',
+          validation:
+            field.required !== undefined ||
+            field.min !== undefined ||
+            field.max !== undefined ||
+            field.minLength !== undefined ||
+            field.maxLength !== undefined ||
+            field.pattern !== undefined
+              ? {
+                  required: field.required,
+                  min: field.min,
+                  max: field.max,
+                  minLength: field.minLength,
+                  maxLength: field.maxLength,
+                  pattern: field.pattern,
+                }
+              : undefined,
+          relation: field.relation
+            ? { ...field.relation, entity: { id: field.relation.entity } }
+            : undefined,
+        };
+      }),
   };
 };
 
@@ -87,9 +115,21 @@ export const generateTableSchema = (entityName: EntityName): TableConfig => {
   return {
     title: entity.display.list,
     pageTitle: entity.display.list,
-    columns: entity.fields
-      .filter(field => !('hideInTable' in field) || !field.hideInTable)
-      .map(field => ({
+    columns: (entity.fields as FieldConfig[])
+      .filter((field) => !('hideInTable' in field) || !field.hideInTable)
+      .map((field: FieldConfig): EntityField => {
+        const { placeholder, minLength, min, ...restField } = field;
+        return {
+          ...restField,
+          required: field.required ?? false,
+          options: field.options ?? [],
+          filterable: field.filterable ?? false,
+          relation: field.relation
+            ? { ...field.relation, entity: field.relation.entity as "product" | "sales" }
+            : undefined,
+        };
+      })
+      .map((field: EntityField): Column => ({
         key: field.name,
         label: field.label,
         filterable: field.filterable ?? false,

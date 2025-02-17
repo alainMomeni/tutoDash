@@ -1,17 +1,17 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useApi } from '@/hooks/useApi';
-import { EntityType } from '@/types/schema';
 import { FormField } from '@/types/form/formTypes';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { resetForm as resetFormAction } from '@/store/slices/formSlice';
 import { useNavigate } from 'react-router-dom';
-import { entities } from '@/config/entities';
+import { entities, EntityName } from '@/config/entities';
+import { DataItem } from '@/types/table/tableType';
+import { useEntityManagement } from '@/hooks/useEntityManagement';
 
-export const useForm = (type: EntityType, id?: string) => {
+export const useForm = (type: EntityName, id?: string) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { items, loading, error, create, update } = useApi(type);
-  const { items: productItems } = useApi('product');
+  const { items, loading, error, create, update } = useEntityManagement(type);
+  const { items: productItems } = useEntityManagement('product');
   
   const [formData, setFormData] = useState<Record<string, any>>(() => {
     const entityConfig = entities[type];
@@ -53,7 +53,7 @@ export const useForm = (type: EntityType, id?: string) => {
 
   useEffect(() => {
     if (id && items.length > 0) {
-      const item = items.find(item => item.id === id);
+      const item = items.find((item: DataItem) => item.id === id);
       if (item) {
         setFormData(item);
       }

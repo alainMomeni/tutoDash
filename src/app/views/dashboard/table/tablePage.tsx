@@ -1,8 +1,9 @@
-import DashboardTable from "@components/table/dashboradTable";
+import React from 'react';
+import DashboardTable from "@/components/table/dashboardTable";
 import { generateTableSchema } from '@/utils/schemaGenerators';
-import { TablePageProps } from '@/types/table/tableType';
+import type { TablePageProps } from '@/types/table/tableType';
 
-const TablePage = ({ type }: TablePageProps) => {
+const TablePage: React.FC<TablePageProps> = ({ type }) => {
   const config = generateTableSchema(type);
 
   return (

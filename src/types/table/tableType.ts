@@ -1,42 +1,11 @@
-// src/types/table/tableType.ts
-import { EntityType, DataItem } from "../schema";
-
-interface BaseItem {
-  id: string;
-  [key: string]: any; // Allow any string-keyed properties
-}
-
-interface StatusBooleanItem extends BaseItem {
-  status: boolean;
-}
-
-interface StatusStringItem extends BaseItem {
-  status: 'draft' | 'completed' | 'cancelled';
-}
-
-export interface UserItem extends StatusBooleanItem {
-  name: string;
-  age: number;
-}
-
-export interface ProductItem extends StatusBooleanItem {
-  name: string;
-  price: number;
-  description: string;
-}
-
-export interface SaleItem extends StatusStringItem {
-  product: string;
-  prix_total: number;
-  active: 'Yes' | 'No';
-}
+import type { EntityName, DataItem } from '@/config/entities';
 
 export interface TablePageProps {
-  type: EntityType;
+  type: EntityName;
 }
 
 export interface DashboardTableProps {
-  type: EntityType;
+  type: EntityName;
 }
 
 export interface Column {
@@ -68,5 +37,5 @@ export interface TableProps {
   loading: boolean;
 }
 
-// Re-export DataItem type from schema
+// Re-export DataItem type from schema if needed elsewhere
 export type { DataItem };

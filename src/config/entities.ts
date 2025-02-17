@@ -1,8 +1,30 @@
 import { Package, ShoppingCart } from 'lucide-react';
+import type { BaseEntityWithStringStatus} from '@/types/entities/entityType';
 
+// Entity definitions
+export interface Product extends BaseEntityWithStringStatus {
+  name: string;
+  quantity: number;
+  prix: number;
+  active: 'Yes' | 'No';
+}
+
+export interface Sale extends BaseEntityWithStringStatus {
+  product: string;
+  prix_total: number;
+  active: 'Yes' | 'No';
+}
+
+// Map of all defined entities
+export type EntityMap = {
+  product: Product;
+  sales: Sale;
+};
+
+// Centralized entities configuration
 export const entities = {
   product: {
-    name: 'product',
+    name: 'Product',
     route: 'product',
     icon: Package,
     display: {
@@ -16,60 +38,40 @@ export const entities = {
         type: 'text',
         label: 'Name',
         placeholder: 'Product name',
-        validation: {
-          required: true,
-          minLength: 2
-        },
-        filterable: true,
-        hideInForm: false
+        required: true,
+        minLength: 2,
+        filterable: true
       },
       {
         name: 'quantity',
         type: 'number',
         label: 'Quantity',
         placeholder: 'Enter quantity',
-        validation: {
-          required: true,
-          min: 0
-        },
-        filterable: true,
-        hideInForm: false
+        required: true,
+        min: 0,
+        filterable: true
       },
       {
         name: 'prix',
         type: 'number',
         label: 'Price',
         placeholder: 'Enter price',
-        validation: {
-          required: true,
-          min: 0
-        },
-        filterable: true,
-        hideInForm: false
-      },
-      {
-        name: 'status',
-        type: 'enum',
-        label: 'Status',
-        options: ['draft', 'completed', 'cancelled'],
-        filterable: true,
-        hideInForm: true,
-        hideInTable: true,
-        defaultValue: 'draft'
+        required: true,
+        min: 0,
+        filterable: true
       },
       {
         name: 'active',
         type: 'enum',
         label: 'Active',
         options: ['Yes', 'No'],
-        filterable: true,
-        hideInForm: true,
-        defaultValue: 'Yes'
+        required: true,
+        filterable: true
       }
     ]
   },
   sales: {
-    name: 'sales',
+    name: 'Sales',
     route: 'sales',
     icon: ShoppingCart,
     display: {
@@ -82,52 +84,40 @@ export const entities = {
         name: 'product',
         type: 'enum',
         label: 'Product',
-        options: [],
-        validation: {
-          required: true
-        },
-        filterable: true,
         relation: {
           entity: 'product',
           labelField: 'name',
           valueField: 'id'
-        }
+        },
+        required: true,
+        filterable: true
       },
       {
         name: 'prix_total',
         type: 'number',
         label: 'Total Price',
         placeholder: 'Auto-calculated from product',
-        validation: {
-          required: true,
-          min: 0
-        },
-        filterable: true,
-        hideInForm: false,
-        readOnly: true
-      },
-      {
-        name: 'status',
-        type: 'enum',
-        label: 'Status',
-        options: ['draft', 'completed', 'cancelled'],
-        filterable: true,
-        hideInForm: true,
-        hideInTable: true,
-        defaultValue: 'draft'
+        required: true,
+        min: 0,
+        filterable: true
       },
       {
         name: 'active',
         type: 'enum',
         label: 'Active',
         options: ['Yes', 'No'],
-        filterable: true,
-        hideInForm: true,
-        defaultValue: 'Yes'
+        required: true,
+        filterable: true
       }
     ]
   }
-} as const;
+};
 
-export type EntityConfig = typeof entities;
-export type EntityName = keyof EntityConfig;
+// Optionally, export other types like DataItem if needed:
+export interface DataItem {
+  id: string;
+  [key: string]: any;
+}
+
+// Re-export EntityName from your types file using export type for isolatedModules
+export type { EntityName } from '@/types/entities/entityType';

@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
-import DashboardForm from '@/components/form/dashboardForm';
 import { generateFormSchema } from '@/utils/schemaGenerators';
 import { FormPageProps } from '@/types/form/formTypes';
+import { DashboardForm } from '@/components/form/FormComponents';
 
 const FormPage = ({ type }: FormPageProps) => {
   const { id } = useParams();

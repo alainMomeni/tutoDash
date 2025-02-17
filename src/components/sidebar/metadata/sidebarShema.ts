@@ -24,7 +24,7 @@ export const sidebarConfig: SidebarConfig = {
       id: 'sales',
       menuItem: {
         id: 'sales',
-        title: 'Sales',
+        title: '',
         icon: DollarSign,
         targetSectionId: 'sales'
       },
@@ -49,7 +49,7 @@ export const sidebarConfig: SidebarConfig = {
       id: 'reports',
       menuItem: {
         id: 'reports',
-        title: 'Reports',
+        title: '',
         icon: FileText,
         targetSectionId: 'reports'
       },
@@ -59,7 +59,7 @@ export const sidebarConfig: SidebarConfig = {
       id: 'settings',
       menuItem: {
         id: 'settings',
-        title: 'Settings',
+        title: '',
         icon: Settings,
         targetSectionId: 'settings'
       },
